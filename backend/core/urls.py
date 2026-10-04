@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from api.views import TarefaViewSet
 
 router = DefaultRouter()
-router.register(r'tarefas', TarefaViewSet)
+router.register(r'tarefas', TarefaViewSet) 
 
 urlpatterns = [
     path('', include(router.urls)),
