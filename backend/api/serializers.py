@@ -4,4 +4,12 @@ from .models import Tarefas
 class TarefasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarefas
-        fields = '__all__'
+        fields = [
+            'id',
+            'titulo',
+            'descricao',
+            'status',
+            'prioridade',
+            'data_inicio',
+            'data_fim',
+        ]
