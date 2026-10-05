@@ -37,17 +37,6 @@ class TarefaViewSet(viewsets.ModelViewSet):
             'por_status': por_status,
             'prioridade_media': round(media, 2) if media is not None else 0,
         }, status=status.HTTP_200_OK)
-    
-
-    @action(detail=True, methods=['post', 'patch'])
-    def marcar_concluida(self, request, pk=None):
-        tarefa = self.get_object()
-
-        if tarefa.status == 'concluida' or tarefa.status == 'concluída':
-            return Response(
-                {'erro': 'essa tarefa já foi concluída'},
-                status = status.HTTP_400_BAD_REQUEST
-            )
         
         tarefa.status = 'concluída'
         tarefa.data_fim = timezone.now()
@@ -57,16 +46,6 @@ class TarefaViewSet(viewsets.ModelViewSet):
             {'status': 'tarefa marcada como concluída'},
             status = status.HTTP_200_OK
         )
-
-    @action(detail=False, methods=['get'])
-    def busca_por_titulo(self, request):
-        consulta = request.query_params.get('q', None)
-
-        if not consulta:
-            return Response(
-                {'erro': 'deve-se fornecer o termo de busca no parâmetro "q"'},
-                status = status.HTTP_400_BAD_REQUEST
-            )
         
         tarefas = self.get_queryset().filter(titulo__icontains=consulta)
 
