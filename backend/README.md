@@ -37,3 +37,4 @@ python manage.py runserver
 - `GET /api/tarefas/maior_prioridade/` - Retorna a lista de tarefas onde a prioridade seja maior ou igual a 4.
 - `GET /api/tarefas/busca_por_titulo/?q=termo` - Busca tarefas que contenham uma palavra específica fornecida na URL.
 - `POST /api/tarefas/{id}/marcar_concluida/` - Marca automaticamente o status da tarefa correspondente ao id para concluida e registra a data de fim.
+- `GET /api/tarefas/estatisticas/` - Retorna um resumo com o total de tarefas, quantidade por status e a média de prioridade.
