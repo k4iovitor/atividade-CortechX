@@ -22,3 +22,8 @@ class TarefasSerializer(serializers.ModelSerializer):
                 f"Status inválido. Use um desses: {', '.join(STATUS_VALIDOS)}."
             )
         return value
+
+    def validate_prioridade(self, value):
+        if value < 0 or value > 5:
+            raise serializers.ValidationError("A prioridade deve estar entre 0 e 5.")
+        return value
