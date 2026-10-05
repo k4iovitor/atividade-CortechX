@@ -38,10 +38,6 @@ class TarefaViewSet(viewsets.ModelViewSet):
             'prioridade_media': round(media, 2) if media is not None else 0,
         }, status=status.HTTP_200_OK)
         
-        tarefa.status = 'concluída'
-        tarefa.data_fim = timezone.now()
-        tarefa.save()
-
         return Response(
             {'status': 'tarefa marcada como concluída'},
             status = status.HTTP_200_OK
