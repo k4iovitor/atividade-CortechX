@@ -1,6 +1,8 @@
 from django.utils import timezone
+from django.db.models import Avg, Count, Q
 
 from rest_framework import viewsets, status
+
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -17,6 +19,25 @@ class TarefaViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(tarefas, many=True)
         
         return Response(serializer.data)
+
+
+    @action(detail=False, methods=['get'])
+    def estatisticas(self, request):
+
+        total = Tarefas.objects.count()
+        media = Tarefas.objects.aggregate(m=Avg('prioridade'))['m']
+
+        por_status = {
+            item['status']: item['qtd']
+            for item in Tarefas.objects.values('status').annotate(qtd=Count('id'))
+        }
+
+        return Response({
+            'total': total,
+            'por_status': por_status,
+            'prioridade_media': round(media, 2) if media is not None else 0,
+        }, status=status.HTTP_200_OK)
+    
 
     @action(detail=True, methods=['post', 'patch'])
     def marcar_concluida(self, request, pk=None):
