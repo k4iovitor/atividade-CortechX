@@ -38,3 +38,29 @@ python manage.py runserver
 - `GET /api/tarefas/busca_por_titulo/?q=termo` - Busca tarefas que contenham uma palavra específica fornecida na URL.
 - `POST /api/tarefas/{id}/marcar_concluida/` - Marca automaticamente o status da tarefa correspondente ao id para concluida e registra a data de fim.
 - `GET /api/tarefas/estatisticas/` - Retorna um resumo com o total de tarefas, quantidade por status e a média de prioridade.
+
+## Arquitetura de diretórios
+
+```
+.
+├── backend/
+│   ├── api/
+│   │   ├── migrations/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tests.py
+│   │   └── views.py
+│   ├── core/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   ├── asgi.py
+│   │   └── wsgi.py
+│   ├── db.sqlite3
+│   ├── manage.py
+│   └── requirements.txt
+├── docs/
+├── frontend/
+└── README.md
+```
