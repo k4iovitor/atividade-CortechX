@@ -15,6 +15,7 @@ class TarefaViewSet(viewsets.ModelViewSet):
     def maior_prioridade(self, request):
         tarefas = self.get_queryset().filter(prioridade__gte=4)
         serializer = self.get_serializer(tarefas, many=True)
+        
         return Response(serializer.data)
 
     @action(detail=True, methods=['post', 'patch'])
@@ -25,6 +26,17 @@ class TarefaViewSet(viewsets.ModelViewSet):
         tarefa.save()
 
         return Response({'status': 'tarefa marcada como concluída'})
-    
 
-    
+    @action(detail=False, methods=['get'])
+    def busca_por_titulo(self, request):
+        consulta = request.query_params.get('q', None)
+        
+        if consulta:
+            tarefas = self.get_queryset().filter(titulo__icontains=consulta)
+        else:
+            tarefas = self.get_queryset()
+
+        serializer = self.get_serializer(tarefas, many=True)
+
+        return Response(serializer.data)
+
