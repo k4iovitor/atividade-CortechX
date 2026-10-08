@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from .models import Tarefas
 
-STATUS_VALIDOS = ['aberta', 'em_andamento', 'concluida']
-
 class TarefasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarefas
@@ -15,13 +13,6 @@ class TarefasSerializer(serializers.ModelSerializer):
             'data_inicio',
             'data_fim',
         ]
-
-    def validate_status(self, value):
-        if value not in STATUS_VALIDOS:
-            raise serializers.ValidationError(
-                f"Status inválido. Use um desses: {', '.join(STATUS_VALIDOS)}."
-            )
-        return value
 
     def validate_prioridade(self, value):
         if value < 0 or value > 5:
@@ -38,6 +29,6 @@ class TarefasSerializer(serializers.ModelSerializer):
 
         if inicio and fim and fim < inicio:
             raise serializers.ValidationError(
-                {'data_fim': 'A data de fim não pode ser anterior à data de inicio.'}
+                {'data_fim': 'A data de fim não pode ser anterior à data de início.'}
             )
         return data
