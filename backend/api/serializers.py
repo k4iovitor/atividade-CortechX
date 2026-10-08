@@ -14,11 +14,6 @@ class TarefasSerializer(serializers.ModelSerializer):
             'data_fim',
         ]
 
-    def validate_prioridade(self, value):
-        if value < 0 or value > 5:
-            raise serializers.ValidationError("A prioridade deve estar entre 0 e 5.")
-        return value
-
     def validate(self, data):
         if self.instance:
             inicio = data.get('data_inicio', self.instance.data_inicio)
