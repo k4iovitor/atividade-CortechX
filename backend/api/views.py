@@ -33,12 +33,12 @@ class TarefaViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post', 'patch'])
     def marcar_concluida(self, request, pk=None):
         tarefa = self.get_object()
-        if tarefa.status == 'concluída' or tarefa.status == 'concluída':
+        if tarefa.status == 'concluida':
             return Response(
                 {'erro': 'essa tarefa já foi concluída'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        tarefa.status = 'concluída'
+        tarefa.status = 'concluida'
         tarefa.data_fim = timezone.now()
         tarefa.save()
         return Response(
