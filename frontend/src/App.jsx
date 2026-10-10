@@ -43,7 +43,7 @@ function App() {
           console.error(await resposta.json());
       }
     } catch (erro) { console.error(erro); }
-  };
+  }; // função genérica do js que faz um POST na API para adicionar os dados coletados do formulário que cria a tarefa
 
   return (
     <div className="app-container">
