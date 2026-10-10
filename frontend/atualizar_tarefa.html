@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atualizar Tarefa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #1f7a50;
+      --verde-escuro: #0d4a2c;
+      --turquesa: #2ecfc4;
+      --vermelho: #b71c1c;
+      --borda: #8a8a8a;
+      --fundo: #bdbdbd;
+      --texto: #111;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: var(--fundo); color: var(--texto);
+      display: flex; justify-content: center;
+    }
+    .app { width: 100%; max-width: 390px; padding: 20px 14px 32px; }
+    .topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .topo h1 { font-size: 22px; margin: 0; font-weight: 600; }
+    .avatar { width: 52px; height: 52px; border-radius: 50%; background: #6b8f8c; }
+
+    .modal { background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+    .modal-topo { display: flex; align-items: center; margin-bottom: 12px; }
+    .modal-topo h2 { flex: 1; text-align: center; font-size: 16px; font-weight: 500; margin: 0; }
+    .fechar { background: none; border: 0; font-size: 22px; cursor: pointer; width: 32px; line-height: 1; }
+
+    input[type=text], textarea, select, input[type=date] {
+      width: 100%; font: inherit; font-size: 15px;
+      border: 1.5px solid var(--borda); border-radius: 8px;
+      padding: 10px 12px; background: #fff; margin-bottom: 10px;
+    }
+    input[name=titulo], select { text-align: center; }
+    textarea { min-height: 120px; resize: vertical; }
+    .datas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    :focus-visible { outline: 3px solid var(--verde); outline-offset: 2px; }
+
+    fieldset { border: 0; padding: 0; margin: 8px 0 14px; text-align: center; }
+    legend { font-weight: 500; margin: 0 auto 8px; padding: 0; }
+    .prioridades { display: flex; justify-content: space-around; }
+    .prioridades label { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; }
+    .prioridades input { position: absolute; opacity: 0; }
+    .bolinha {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 1.5px solid var(--borda); background: #fff;
+      box-shadow: 0 2px 3px rgba(0,0,0,.3);
+    }
+    .bolinha.on { background: var(--turquesa); }
+    .prioridades input:focus-visible + .bolinha { outline: 3px solid var(--verde); outline-offset: 2px; }
+
+    .acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .acoes button {
+      font: inherit; font-weight: 500; font-size: 16px; color: #fff;
+      border: 0; border-radius: 8px; padding: 12px; cursor: pointer;
+    }
+    .excluir { background: var(--vermelho); }
+    .atualizar { background: var(--verde); }
+    button:disabled { opacity: .6; cursor: wait; }
+
+    #msg { margin: 0 0 12px; font-size: 14px; min-height: 20px; text-align: center; }
+    #msg.erro { color: var(--vermelho); }
+    #msg.ok { color: var(--verde-escuro); }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topo">
+      <h1>Olá, Davidys!</h1>
+      <div class="avatar" aria-hidden="true"></div>
+    </header>
+
+    <form class="modal" id="form" novalidate>
+      <div class="modal-topo">
+        <button type="button" class="fechar" id="fechar" aria-label="Fechar">×</button>
+        <h2>Atualizar Tarefa</h2>
+        <span style="width:32px"></span>
+      </div>
+
+      <p id="msg" role="status" aria-live="polite"></p>
+
+      <input type="text" name="titulo" id="titulo" placeholder="Título da tarefa" aria-label="Título" maxlength="255">
+      <textarea name="descricao" id="descricao" placeholder="Descrição" aria-label="Descrição"></textarea>
+
+      <select name="status" id="status" aria-label="Status">
+        <option value="aberta">Aberta</option>
+        <option value="em_andamento">Em andamento</option>
+        <option value="concluida">Concluída</option>
+      </select>
+
+      <div class="datas">
+        <input type="date" name="data_inicio" id="data_inicio" aria-label="Data de início">
+        <input type="date" name="data_fim" id="data_fim" aria-label="Data de fim">
+      </div>
+
+      <fieldset>
+        <legend>Prioridade (1 a 5)</legend>
+        <div class="prioridades" id="prioridades"></div>
+      </fieldset>
+
+      <div class="acoes">
+        <button type="button" class="excluir" id="excluir">Excluir</button>
+        <button type="submit" class="atualizar" id="atualizar">Atualizar</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const API = "http://127.0.0.1:8000/tarefas";
+
+    const id = new URLSearchParams(location.search).get("id");
+
+    const $ = (s) => document.querySelector(s);
+    const msg = $("#msg");
+    const form = $("#form");
+
+    function aviso(texto, tipo) {
+      msg.textContent = texto;
+      msg.className = tipo || "";
+    }
+
+    const caixa = $("#prioridades");
+    for (let n = 1; n <= 5; n++) {
+      caixa.insertAdjacentHTML("beforeend",
+        `<label><input type="radio" name="prioridade" value="${n}"><span class="bolinha"></span>${n}</label>`);
+    }
+    function pintar() {
+      const escolhida = Number(form.prioridade.value || 0);
+      caixa.querySelectorAll(".bolinha").forEach((b, i) =>
+        b.classList.toggle("on", i < escolhida));
+    }
+    caixa.addEventListener("change", pintar);
+
+    async function carregar() {
+      if (!id) { aviso("Abra a tela com ?id=NUMERO_DA_TAREFA na URL.", "erro"); return; }
+      try {
+        const r = await fetch(`${API}/${id}/`);
+        if (r.status === 404) { aviso("Tarefa não encontrada.", "erro"); return; }
+        const t = await r.json();
+        $("#titulo").value = t.titulo;
+        $("#descricao").value = t.descricao || "";
+        // Status antigos (ex: "A fazer") não existem mais: cai em "aberta"
+        const valido = ["aberta", "em_andamento", "concluida"].includes(t.status);
+        $("#status").value = valido ? t.status : "aberta";
+        $("#data_inicio").value = t.data_inicio ? t.data_inicio.slice(0, 10) : "";
+        $("#data_fim").value = t.data_fim ? t.data_fim.slice(0, 10) : "";
+        const p = form.querySelector(`input[name=prioridade][value="${t.prioridade}"]`);
+        if (p) p.checked = true;
+        pintar();
+      } catch {
+        aviso("Não consegui falar com a API. O servidor está rodando?", "erro");
+      }
+    }
+
+    const paraISO = (d) => (d ? `${d}T00:00:00` : null);
+
+    function erroDRF(obj) {
+      return Object.entries(obj)
+        .map(([campo, m]) => `${campo}: ${[].concat(m).join(" ")}`).join(" | ");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form.prioridade.value) { aviso("Escolha uma prioridade de 1 a 5.", "erro"); return; }
+      const corpo = {
+        titulo: $("#titulo").value.trim(),
+        descricao: $("#descricao").value,
+        status: $("#status").value,
+        prioridade: Number(form.prioridade.value),
+        data_inicio: paraISO($("#data_inicio").value),
+        data_fim: paraISO($("#data_fim").value),
+      };
+      $("#atualizar").disabled = true;
+      try {
+        const r = await fetch(`${API}/${id}/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(corpo),
+        });
+        if (r.ok) aviso("Tarefa atualizada.", "ok");
+        else aviso(erroDRF(await r.json()), "erro");   
+      } catch {
+        aviso("Não consegui falar com a API.", "erro");
+      }
+      $("#atualizar").disabled = false;
+    });
+
+    $("#excluir").addEventListener("click", async () => {
+      if (!confirm("Excluir esta tarefa? Isso não pode ser desfeito.")) return;
+      try {
+        const r = await fetch(`${API}/${id}/`, { method: "DELETE" });
+        if (r.status === 204) { aviso("Tarefa excluída.", "ok"); form.querySelectorAll("input,textarea,select,button").forEach(el => el.disabled = true); }
+        else aviso("Não foi possível excluir.", "erro");
+      } catch {
+        aviso("Não consegui falar com a API.", "erro");
+      }
+    });
+
+    $("#fechar").addEventListener("click", () => history.back());
+
+    carregar();
+  </script>
+</body>
+</html>
