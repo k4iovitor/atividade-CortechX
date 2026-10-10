@@ -1,0 +1,37 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 20px 16px;
+}
+
+.header__title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.stats-card {
+    background-color: var(--color-primary-light);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stats-card__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.stats-card__info {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid var(--color-text-main);
+    margin: 0 20px 24px;
+}
