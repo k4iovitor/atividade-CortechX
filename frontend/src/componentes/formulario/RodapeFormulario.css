@@ -1,12 +1,29 @@
 .modal__footer {
     background-color: #fff;
-    padding: 20px;
+    padding: 16px 20px;
     display: flex;
-    gap: 16px;
-    padding-bottom: 40px; /* Safe area for bottom */
+    gap: 12px;
+    padding-bottom: 36px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Linha decorativa superior */
+.modal__footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border-light), transparent);
 }
 
 .modal__footer .btn {
     flex: 1;
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
-

@@ -1,11 +1,75 @@
 .task-card {
+    width: 100%;
+    min-height: 80px;
+    box-sizing: border-box;
     background-color: var(--color-task-bg);
-    border-radius: 8px;
-    padding: 16px;
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--color-primary);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    animation: cardSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
+
+/* Forma geométrica decorativa no canto do cartão */
+.task-card::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary-light));
+    opacity: 0.12;
+    transition: all var(--transition-normal);
+}
+
+/* Linha decorativa inferior */
+.task-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.task-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-left-color: var(--color-accent);
+}
+
+.task-card:hover::before {
+    transform: scale(1.5);
+    opacity: 0.18;
+}
+
+.task-card:hover::after {
+    opacity: 1;
+}
+
+.task-card:active {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Delay escalonado para animação de entrada dos cartões */
+.task-card:nth-child(1) { animation-delay: 0s; }
+.task-card:nth-child(2) { animation-delay: 0.06s; }
+.task-card:nth-child(3) { animation-delay: 0.12s; }
+.task-card:nth-child(4) { animation-delay: 0.18s; }
+.task-card:nth-child(5) { animation-delay: 0.24s; }
+.task-card:nth-child(6) { animation-delay: 0.30s; }
+.task-card:nth-child(7) { animation-delay: 0.36s; }
+.task-card:nth-child(8) { animation-delay: 0.42s; }
 
 .task-card__header {
     display: flex;
@@ -17,34 +81,48 @@
 .task-card__title-group {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 16px;
+    gap: 10px;
+    font-size: 15px;
+    flex: 1;
+    min-width: 0;
 }
 
 .task-card__title {
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--color-text-main);
 }
 
 .task-card__separator {
-    font-weight: 400;
+    font-weight: 300;
+    color: var(--color-border);
+    font-size: 14px;
 }
 
 .task-card__status {
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-primary);
+    background-color: var(--color-accent-light);
+    padding: 3px 10px;
+    border-radius: 20px;
 }
 
 .task-card__checkbox {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     accent-color: var(--color-primary);
     cursor: pointer;
+    flex-shrink: 0;
+    margin-left: 10px;
 }
 
 .task-card__desc {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
-    line-height: 1.4;
-    padding-right: 24px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    padding-right: 30px;
 }
-

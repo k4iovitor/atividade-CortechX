@@ -1,19 +1,19 @@
 .date-group {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .date-input {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
 }
 
 .date-input--readonly {
     font-weight: 400;
     color: var(--color-text-main);
 }
-

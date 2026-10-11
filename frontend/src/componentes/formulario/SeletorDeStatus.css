@@ -6,13 +6,26 @@
     appearance: none;
     -webkit-appearance: none;
     font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+}
+
+.modal__select:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-sm);
 }
 
 .select-icon {
     position: absolute;
-    right: 12px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
+    color: var(--color-text-light);
+    transition: color var(--transition-fast);
 }
 
+.select-wrapper:hover .select-icon {
+    color: var(--color-accent);
+}
