@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import FormularioTarefa from './componentes/formulario/FormularioTarefa';
-import CartaoTarefa from './componentes/cartao/CartaoTarefa';
 import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
 
 function App() {
@@ -46,6 +45,39 @@ function App() {
     } catch (erro) { console.error(erro); }
   }; // função genérica do js que faz um POST na API para adicionar os dados coletados do formulário que cria a tarefa
 
+  const alternarStatusTarefa = async (id, statusAtual) => {
+
+    const isConcluida = statusAtual === 'concluida' || statusAtual === 'concluída'; // verifica se o status da tarefa é concluida, e armazena o booleano dentro de isConluida
+    const novoStatus = isConcluida ? 'aberta' : 'concluida'; // se já estava concluída, desmarca para aberta. Caso contrário, marca como concluida
+
+    try {
+      if (novoStatus === 'concluida') {
+        const resposta = await fetch(`/tarefas/${id}/marcar_concluida/`, {
+          method: 'PATCH',
+        }); // se o status foi marcado para concluido, faz-se uma requisição PATCH no endpoint de marcar_concluida para modificar o status da tarefa para concluída
+        if (!resposta.ok) {
+          await fetch(`/tarefas/${id}/`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'concluida' })
+          }); // se der erro pelo endpoint, forço o PATCH via JS
+        }
+      } else {
+        await fetch(`/tarefas/${id}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'aberta', data_fim: null })
+        }); // se o status foi desmarcado, forço o PATCH via JS para modificar o status da tarefa para aberta novamente
+      }
+
+      buscarTarefas();
+
+    } catch (erro) {
+      console.error(erro);
+      buscarTarefas();
+    }
+  };
+
   return (
     <div className="app-container">
       <div id="main-view">
@@ -55,7 +87,7 @@ function App() {
 
           <main className="main-content">
               <section className="filter-by-title" style={{ marginTop: '20px' }}>
-                <FiltragemPorTitulo tarefas={tarefas}/>
+                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa}/>
               </section>
           </main>
 
