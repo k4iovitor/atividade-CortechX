@@ -1,3 +1,5 @@
+import './CartaoTarefa.css';
+
 export default function CartaoTarefa({ tarefa }) {
     return (
         <article className="task-card">

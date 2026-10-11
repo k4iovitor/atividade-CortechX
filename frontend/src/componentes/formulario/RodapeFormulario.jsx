@@ -1,3 +1,5 @@
+import './RodapeFormulario.css';
+
 export default function RodapeFormulario({ aoCancelar }) {
     return (
         <div className="modal__footer">

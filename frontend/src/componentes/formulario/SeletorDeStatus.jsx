@@ -1,3 +1,5 @@
+import './SeletorDeStatus.css';
+
 export default function SeletorDeStatus() {
     return (
         <div className="select-wrapper">

@@ -1,0 +1,19 @@
+.date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.date-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.date-input--readonly {
+    font-weight: 400;
+    color: var(--color-text-main);
+}
+
