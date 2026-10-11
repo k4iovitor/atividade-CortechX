@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import FormularioTarefa from './componentes/formulario/FormularioTarefa';
-import CartaoTarefa from './componentes/CartaoTarefa';
+import CartaoTarefa from './componentes/cartao/CartaoTarefa';
+import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
 
 function App() {
   const [tarefas, setTarefas] = useState([]); // estado que armazena as tarefas criadas pelo usuário
@@ -53,10 +54,8 @@ function App() {
           </header>
 
           <main className="main-content">
-              <section className="task-list" style={{ marginTop: '20px' }}>
-                  {tarefas.map(tarefa => (
-                      <CartaoTarefa key={tarefa.id} tarefa={tarefa} />
-                  ))}
+              <section className="filter-by-title" style={{ marginTop: '20px' }}>
+                <FiltragemPorTitulo tarefas={tarefas}/>
               </section>
           </main>
 
