@@ -1,3 +1,5 @@
+import './SeletorDePrioridade.css';
+
 export default function SeletorDePrioridade({ prioridade, setPrioridade }) {
   return (
     <div className="priority-group">

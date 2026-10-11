@@ -1,0 +1,18 @@
+.select-wrapper {
+    position: relative;
+}
+
+.modal__select {
+    appearance: none;
+    -webkit-appearance: none;
+    font-weight: 600;
+}
+
+.select-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+

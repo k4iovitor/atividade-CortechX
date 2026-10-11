@@ -1,0 +1,50 @@
+.task-card {
+    background-color: var(--color-task-bg);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.task-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.task-card__title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.task-card__title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.task-card__separator {
+    font-weight: 400;
+}
+
+.task-card__status {
+    font-weight: 500;
+}
+
+.task-card__checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.task-card__desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    padding-right: 24px;
+}
+

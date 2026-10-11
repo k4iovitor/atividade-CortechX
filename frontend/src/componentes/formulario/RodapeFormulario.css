@@ -1,0 +1,12 @@
+.modal__footer {
+    background-color: #fff;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    padding-bottom: 40px; /* Safe area for bottom */
+}
+
+.modal__footer .btn {
+    flex: 1;
+}
+

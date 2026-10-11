@@ -1,3 +1,5 @@
+import './CamposDeTexto.css';
+
 export default function CamposDeTexto() {
     return (
         <>

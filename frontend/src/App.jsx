@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './index.css';
+import './App.css';
 import FormularioTarefa from './componentes/formulario/FormularioTarefa';
 import CartaoTarefa from './componentes/CartaoTarefa';
 

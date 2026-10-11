@@ -1,3 +1,14 @@
+.app-container {
+    width: 100%;
+    max-width: 414px;
+    min-height: 100vh;
+    background-color: var(--color-bg-app);
+    position: relative;
+    overflow-x: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* Header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -10,28 +21,58 @@
     font-weight: 700;
 }
 
-.stats-card {
-    background-color: var(--color-primary-light);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.header__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-.stats-card__title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 4px;
+.main-content {
+    padding: 0 20px 80px;
 }
 
-.stats-card__info {
-    font-size: 14px;
-    font-weight: 400;
+/* Task List */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.divider {
+/* Floating Action Button (FAB) */
+.fab {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: #fff;
     border: none;
-    border-top: 1px solid var(--color-text-main);
-    margin: 0 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Overlay & Wrapper do Modal */
+.modal-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 20;
+    display: none;
+}
+
+.modal-wrapper {
+    position: absolute;
+    top: 100px;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    z-index: 30;
+    display: none;
 }

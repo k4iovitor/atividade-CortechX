@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './FormularioTarefa.css';
 import CamposDeTexto from './CamposDeTexto';
 import SeletorDeStatus from './SeletorDeStatus';
 import GrupoDeDatas from './GrupoDeDatas';
