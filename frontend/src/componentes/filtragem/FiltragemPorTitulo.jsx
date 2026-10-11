@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './FiltragemPorTitulo.css';
 import CartaoTarefa from '../cartao/CartaoTarefa';
 
-export default function FiltragemPorTitulo ({ tarefas }) {
+export default function FiltragemPorTitulo ({ tarefas, aoAlternarStatus }) {
     const [tituloTarefa, setTitulo] = useState(''); // estado que armazena o titulo da tarefa que o usuário deseja filtrar.
 
     const lidarComTexto = (e) => {
@@ -18,7 +18,7 @@ export default function FiltragemPorTitulo ({ tarefas }) {
             <input type="text" name="titulo" className="input filter_by_title" placeholder="Filtrar por titulo..." required value={tituloTarefa} onChange={lidarComTexto}/>
             <section className="task-list" style={{ marginTop: '20px' }}>
                 {tarefasFiltradas.map(tarefa => (
-                    <CartaoTarefa key={tarefa.id} tarefa={tarefa} />
+                    <CartaoTarefa key={tarefa.id} tarefa={tarefa} onAlternarStatus={aoAlternarStatus} />
                 ))}
             </section>
         </>
