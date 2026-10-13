@@ -10,6 +10,19 @@ export default function VisaoGeral() {
         </button>
         <h2 className="modal__title modal__title--centered">Visão Geral</h2>
       </div>
+      
+      <div className="modal__body">
+        <div className="chart-group">
+          <div className="chart-item">
+            <div className="chart__circle"><span>3</span></div>
+            <p className="chart__label">Quantidade<br />de Tarefas</p>
+          </div>
+          <div className="chart-item">
+            <div className="chart__circle"><span>3.8</span></div>
+            <p className="chart__label">Prioridade<br />Média</p>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
