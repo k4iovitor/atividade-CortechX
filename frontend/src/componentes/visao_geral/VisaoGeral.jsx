@@ -1,3 +1,6 @@
+import './VisaoGeral.css';
+
+// Tela "Visão Geral": resumo das tarefas.
 export default function VisaoGeral() {
   return (
     <>
@@ -10,7 +13,7 @@ export default function VisaoGeral() {
         </button>
         <h2 className="modal__title modal__title--centered">Visão Geral</h2>
       </div>
-      
+
       <div className="modal__body">
         <div className="chart-group">
           <div className="chart-item">

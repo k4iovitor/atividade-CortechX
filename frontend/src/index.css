@@ -201,12 +201,6 @@ body {
 .filters__actions { display: flex; gap: 12px; }
 
 /* Charts */
-.chart-group { display: flex; justify-content: center; gap: 32px; margin-top: 16px; margin-bottom: 32px; }
-.chart-item { text-align: center; }
-.chart__circle { width: 100px; height: 100px; border-radius: 50%; border: 8px solid var(--color-accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-.chart__circle span { font-size: 32px; font-weight: 700; }
-.chart__label { font-weight: 600; font-size: 14px; line-height: 1.2; }
-
 .status-list__title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
 .status-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .status-item { display: flex; align-items: center; border: 1px solid var(--color-border); border-radius: 6px; padding: 12px 16px; }
