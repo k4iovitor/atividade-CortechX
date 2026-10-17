@@ -192,6 +192,11 @@ function App() {
           </header>
 
           <main className="main-content">
+
+              <div className="stats-card">
+                <h2 className="stats-card__title">Visão Geral</h2>
+              </div>
+
               <section className="filter-by-title" style={{ marginTop: '20px' }}>
                 <FiltragemPorTitulo 
                   tarefas={tarefas} 
