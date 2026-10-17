@@ -173,7 +173,7 @@ function App() {
 
           <main className="main-content">
               <section className="filter-by-title" style={{ marginTop: '20px' }}>
-                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa}/>
+                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa} aoEditar={abrirEdicao}/>
               </section>
           </main>
 
@@ -182,12 +182,26 @@ function App() {
           </button>
       </div>
 
-      <div className="modal-overlay" id="overlay" style={{display: modalAberto ? 'block' : 'none'}} onClick={fecharModal}></div>
+      <div className="modal-overlay" id="overlay" style={{display: (modalAberto || tarefaEmEdicao) ? 'block' : 'none'}} onClick={() => { fecharModal(); fecharEdicao(); }}></div>
 
       {modalAberto && (
       <div className="modal-wrapper" style={{display: 'block'}}>
           <div className="modal">
               <FormularioTarefa aoCriarTarefa={criarTarefa} aoCancelar={fecharModal} />
+          </div>
+      </div>
+      )}
+
+       {tarefaEmEdicao && (
+      <div className="modal-wrapper" style={{display: 'block'}}>
+          <div className="modal">
+              <FormularioAtualizar
+                key={tarefaEmEdicao.id}
+                tarefa={tarefaEmEdicao}
+                aoAtualizar={atualizarTarefa}
+                aoExcluir={excluirTarefa}
+                aoFechar={fecharEdicao}
+              />
           </div>
       </div>
       )}
