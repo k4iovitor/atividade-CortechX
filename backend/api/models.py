@@ -21,7 +21,7 @@ class Tarefas(models.Model):
     status = models.CharField(max_length=50, choices=escolhas)
     prioridade = models.IntegerField(choices=prioridades, default=1)
     data_inicio = models.DateTimeField('data de inicio', null=False, blank=False)
-    data_fim = models.DateTimeField('data de fim', null=False, blank=False)
+    data_fim = models.DateTimeField('data de fim', null=True, blank=True)
 
     def __str__(self):
         return self.titulo

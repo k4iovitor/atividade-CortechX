@@ -145,17 +145,23 @@ function App() {
           }); // se der erro pelo endpoint, forço o PATCH via JS
         }
       } else {
-        await fetch(`/tarefas/${id}/`, {
+        const resposta = await fetch(`/tarefas/${id}/`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status: 'aberta', data_fim: null })
         }); // se o status foi desmarcado, forço o PATCH via JS para modificar o status da tarefa para aberta novamente
+        if (!resposta.ok) {
+          const erros = await resposta.json();
+          const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
+          dispararNotificacao('erro', msg || 'Erro ao reabrir tarefa.');
+        }
       }
 
       buscarTarefas();
 
     } catch (erro) {
       console.error(erro);
+      dispararNotificacao('erro', 'Não consegui falar com a API.');
       buscarTarefas();
     }
   };
