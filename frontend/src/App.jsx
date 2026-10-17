@@ -57,6 +57,7 @@ function App() {
 
   };
 
+  // faz um POST na API com a nova tarefa. Devolve null se deu certo, ou o texto do erro se o backend recusou (400)
   const criarTarefa = async (novaTarefa) => {
     try {
       const resposta = await fetch('/tarefas/', {
@@ -68,13 +69,16 @@ function App() {
         buscarTarefas();
         fecharModal();
         dispararNotificacao('sucesso', 'Tarefa criada com sucesso!');
-      } else {
-        console.error(await resposta.json());
-        dispararNotificacao('erro', 'Não foi possível criar a tarefa.');
+        return null;
       }
+      const erros = await resposta.json(); // ex: { data_fim: ["..."] }
+      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
+      dispararNotificacao('erro', msg || 'Erro ao criar tarefa.');
+      return msg;
     } catch (erro) {
       console.error(erro);
-      dispararNotificacao('erro', 'Erro ao conectar ao servidor.');
+      dispararNotificacao('erro', 'Não consegui falar com a API.');
+      return 'Não consegui falar com a API.';
     }
   }; // função genérica do js que faz um POST na API para adicionar os dados coletados do formulário que cria a tarefa. 
   // dispara notificações no momento da criação e dos erros que possam surgir no processo
