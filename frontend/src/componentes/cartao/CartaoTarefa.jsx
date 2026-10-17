@@ -1,6 +1,6 @@
 import './CartaoTarefa.css';
 
-export default function CartaoTarefa({ tarefa, onAlternarStatus }) {
+export default function CartaoTarefa({ tarefa, onAlternarStatus, onEditar }) {
 
     const isConcluida = tarefa.status === 'concluida' || tarefa.status === 'concluída';
     // true se for concluída, false se for aberta ou em_andamento
@@ -8,7 +8,7 @@ export default function CartaoTarefa({ tarefa, onAlternarStatus }) {
     // o checked sendo true, a caixa de marcação é preenchida. Independentemente de estar marcada ou não, se atualiza o status da atividade via onAlternarStatus
     
     return (
-        <article className={`task-card ${isConcluida ? 'task-card--concluida' : ''}`}>
+        <article className={`task-card ${isConcluida ? 'task-card--concluida' : ''}`} onClick={() => onEditar && onEditar(tarefa)}>
             <div className="task-card__header">
                 <div className="task-card__title-group">
                     <h3 className="task-card__title">{tarefa.titulo}</h3>
@@ -17,7 +17,7 @@ export default function CartaoTarefa({ tarefa, onAlternarStatus }) {
                         {isConcluida ? 'Concluída' : (tarefa.status === 'em_andamento' ? 'Em andamento' : 'Aberta')}
                     </span>
                 </div>
-                <label className="task-card__checkbox-container">
+                <label className="task-card__checkbox-container" onClick={(e) => e.stopPropagation()}>
                     <input 
                         type="checkbox" 
                         className="task-card__checkbox" 

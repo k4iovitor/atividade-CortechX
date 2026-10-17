@@ -123,6 +123,42 @@ function App() {
     }
   };
 
+  const abrirEdicao = (tarefa) => setTarefaEmEdicao(tarefa); // abre o modal de atualizar com a tarefa clicada
+  const fecharEdicao = () => setTarefaEmEdicao(null);
+
+  // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou (400)
+  const atualizarTarefa = async (id, dadosAtualizados) => {
+    try {
+      const resposta = await fetch(`/tarefas/${id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosAtualizados)
+      });
+      if (resposta.ok) {
+        buscarTarefas(); // recarrega a lista
+        fecharEdicao();
+        return null;
+      }
+      const erros = await resposta.json(); // ex: { data_fim: ["..."] }
+      return Object.entries(erros).map(([campo, msg]) => `${campo}: ${[].concat(msg).join(' ')}`).join(' | ');
+    } catch (erro) {
+      console.error(erro);
+      return 'Não consegui falar com a API.';
+    }
+  };
+
+  // faz um DELETE na API depois de confirmar com o usuário; o backend responde 204 se apagou
+  const excluirTarefa = async (id) => {
+    if (!window.confirm('Excluir esta tarefa? Isso não pode ser desfeito.')) return;
+    try {
+      const resposta = await fetch(`/tarefas/${id}/`, { method: 'DELETE' });
+      if (resposta.status === 204) {
+        buscarTarefas();
+        fecharEdicao();
+      }
+    } catch (erro) { console.error(erro); }
+  };
+
   const alternarStatusTarefa = async (id, statusAtual) => {
 
     const isConcluida = statusAtual === 'concluida' || statusAtual === 'concluída'; // verifica se o status da tarefa é concluida, e armazena o booleano dentro de isConluida
@@ -173,7 +209,7 @@ function App() {
 
           <main className="main-content">
               <section className="filter-by-title" style={{ marginTop: '20px' }}>
-                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa}/>
+                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa} aoEditar={abrirEdicao}/>
               </section>
           </main>
 
@@ -182,12 +218,26 @@ function App() {
           </button>
       </div>
 
-      <div className="modal-overlay" id="overlay" style={{display: modalAberto ? 'block' : 'none'}} onClick={fecharModal}></div>
+      <div className="modal-overlay" id="overlay" style={{display: (modalAberto || tarefaEmEdicao) ? 'block' : 'none'}} onClick={() => { fecharModal(); fecharEdicao(); }}></div>
 
       {modalAberto && (
       <div className="modal-wrapper" style={{display: 'block'}}>
           <div className="modal">
               <FormularioTarefa aoCriarTarefa={criarTarefa} aoCancelar={fecharModal} />
+          </div>
+      </div>
+      )}
+
+       {tarefaEmEdicao && (
+      <div className="modal-wrapper" style={{display: 'block'}}>
+          <div className="modal">
+              <FormularioAtualizar
+                key={tarefaEmEdicao.id}
+                tarefa={tarefaEmEdicao}
+                aoAtualizar={atualizarTarefa}
+                aoExcluir={excluirTarefa}
+                aoFechar={fecharEdicao}
+              />
           </div>
       </div>
       )}
