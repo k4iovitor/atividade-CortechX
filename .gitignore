@@ -1,2 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes virtuais e variáveis
 venv/
 .env

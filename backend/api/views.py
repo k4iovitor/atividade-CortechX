@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -7,23 +7,29 @@ from .models import Tarefas
 from .serializers import TarefasSerializer
 
 class TarefaViewSet(viewsets.ModelViewSet):
+    
     queryset = Tarefas.objects.all()
     serializer_class = TarefasSerializer
 
     @action(detail=False, methods=['get'])
     def maior_prioridade(self, request):
+
         tarefas = self.get_queryset().filter(prioridade__gte=4)
         serializer = self.get_serializer(tarefas, many=True)
+
         return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def estatisticas(self, request):
+
         total = Tarefas.objects.count()
         media = Tarefas.objects.aggregate(m=Avg('prioridade'))['m']
+
         por_status = {
             item['status']: item['qtd']
             for item in Tarefas.objects.values('status').annotate(qtd=Count('id'))
         }
+
         return Response({
             'total': total,
             'por_status': por_status,
@@ -41,6 +47,7 @@ class TarefaViewSet(viewsets.ModelViewSet):
         tarefa.status = 'concluida'
         tarefa.data_fim = timezone.now()
         tarefa.save()
+
         return Response(
             {'status': 'tarefa marcada como concluída'},
             status=status.HTTP_200_OK
@@ -49,16 +56,21 @@ class TarefaViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def busca_por_titulo(self, request):
         consulta = request.query_params.get('q', None)
+
         if not consulta:
             return Response(
                 {'erro': 'deve-se fornecer o termo de busca no parâmetro "q"'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
         tarefas = self.get_queryset().filter(titulo__icontains=consulta)
+
         if not tarefas.exists():
             return Response(
                 {'erro': 'nenhuma tarefa foi encontrada com esse titulo'},
                 status=status.HTTP_404_NOT_FOUND
             )
+        
         serializer = self.get_serializer(tarefas, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
