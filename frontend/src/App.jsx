@@ -4,6 +4,7 @@ import FormularioTarefa from './componentes/formulario/FormularioTarefa';
 import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
 import FormularioAtualizar from './componentes/formulario/FormularioAtualizar';
 import Notificacao from './componentes/mensagens/Notificacao';
+import VisaoGeral from './componentes/visao_geral/VisaoGeral';
 
 function App() {
   const [tarefas, setTarefas] = useState([]); // estado que armazena as tarefas criadas pelo usuário
@@ -11,6 +12,7 @@ function App() {
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState(null); // tarefa que está sendo editada (null = modal de atualizar fechado)
   const [notificacao, setNotificacao] = useState(null); // estado que armazena os dados da notificação ativa (null = nenhuma notificação na tela)
   const [filtroAltaPrioridade, setFiltroAltaPrioridade] = useState(false); // armazena true se o filtro de alta prioridade (>= 4) está ativo
+  const [visaoGeralAberta, setVisaoGeralAberta] = useState(false); // armazena true se a tela Visão Geral está aberta
   
   const timeoutRef = useRef(null); // guarda a referência do temporizador na memória para não perdê-lo entre as renderizações
 
@@ -95,6 +97,9 @@ function App() {
 
   const abrirEdicao = (tarefa) => setTarefaEmEdicao(tarefa); // abre o modal de atualizar com a tarefa clicada
   const fecharEdicao = () => setTarefaEmEdicao(null);
+
+  const abrirVisaoGeral = () => setVisaoGeralAberta(true); // abre a tela Visão Geral
+  const fecharVisaoGeral = () => setVisaoGeralAberta(false); // fecha a tela Visão Geral
 
   // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou
   const atualizarTarefa = async (id, dadosAtualizados) => {
@@ -192,8 +197,7 @@ function App() {
           </header>
 
           <main className="main-content">
-
-              <div className="stats-card">
+              <div className="stats-card" onClick={abrirVisaoGeral}>
                 <h2 className="stats-card__title">Visão Geral</h2>
               </div>
 
@@ -213,7 +217,7 @@ function App() {
           </button>
       </div>
 
-      <div className="modal-overlay" id="overlay" style={{display: (modalAberto || tarefaEmEdicao) ? 'block' : 'none'}} onClick={() => { fecharModal(); fecharEdicao(); }}></div>
+      <div className="modal-overlay" id="overlay" style={{display: (modalAberto || tarefaEmEdicao || visaoGeralAberta) ? 'block' : 'none'}} onClick={() => { fecharModal(); fecharEdicao(); fecharVisaoGeral(); }}></div>
 
       {modalAberto && (
       <div className="modal-wrapper" style={{display: 'block'}}>
@@ -234,6 +238,14 @@ function App() {
                 aoFechar={fecharEdicao}
               />
           </div>
+      </div>
+      )}
+
+      {visaoGeralAberta && (
+      <div className="modal-wrapper" style={{display: 'block'}}>
+        <div className="modal">
+          <VisaoGeral aoFechar={fecharVisaoGeral} />
+        </div>
       </div>
       )}
 
