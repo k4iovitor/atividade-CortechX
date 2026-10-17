@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import FormularioTarefa from './componentes/formulario/FormularioTarefa';
 import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
 import FormularioAtualizar from './componentes/formulario/FormularioAtualizar';
+import Notificacao from './componentes/mensagens/Notificacao';
 
 function App() {
   const [tarefas, setTarefas] = useState([]); // estado que armazena as tarefas criadas pelo usuário
   const [modalAberto, setModalAberto] = useState(false); // estado que armazena a informação de se o modal está aberto ou não
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState(null); // tarefa que está sendo editada (null = modal de atualizar fechado)
+  const [notificacao, setNotificacao] = useState(null); // estado que armazena os dados da notificação ativa (null = nenhuma notificação na tela)
+  
+  const timeoutRef = useRef(null); // guarda a referência do temporizador na memória para não perdê-lo entre as renderizações
 
   const buscarTarefas = async () => {
     try {
@@ -31,6 +35,28 @@ function App() {
     setModalAberto(false);
   };
 
+  const dispararNotificacao = (tipo, mensagem) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    } // se já houver um temporizador rodando, cancela para reiniciar a contagem dos 5 segundos do novo temporizador
+
+    setNotificacao({ tipo, mensagem }); // atualiza o estado com o tipo e a mensagem para exibir o cartão na tela
+
+    timeoutRef.current = setTimeout(() => {
+      setNotificacao(null);
+    }, 5000); // agenda o fechamento automático da notificação após 5 segundos
+
+  };
+
+  const fecharNotificacao = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    } // cancela o temporizador ativo caso o usuário feche manualmente antes dos 5 segundos
+
+    setNotificacao(null); // limpa o estado, removendo o cartão da tela imediatamente
+
+  };
+
   const criarTarefa = async (novaTarefa) => {
     try {
       const resposta = await fetch('/tarefas/', {
@@ -41,11 +67,61 @@ function App() {
       if (resposta.ok) {
         buscarTarefas();
         fecharModal();
+        dispararNotificacao('sucesso', 'Tarefa criada com sucesso!');
       } else {
-          console.error(await resposta.json());
+        console.error(await resposta.json());
+        dispararNotificacao('erro', 'Não foi possível criar a tarefa.');
       }
-    } catch (erro) { console.error(erro); }
-  }; // função genérica do js que faz um POST na API para adicionar os dados coletados do formulário que cria a tarefa
+    } catch (erro) {
+      console.error(erro);
+      dispararNotificacao('erro', 'Erro ao conectar ao servidor.');
+    }
+  }; // função genérica do js que faz um POST na API para adicionar os dados coletados do formulário que cria a tarefa. 
+  // dispara notificações no momento da criação e dos erros que possam surgir no processo
+
+  const abrirEdicao = (tarefa) => setTarefaEmEdicao(tarefa); // abre o modal de atualizar com a tarefa clicada
+  const fecharEdicao = () => setTarefaEmEdicao(null);
+
+  // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou (400)
+  const atualizarTarefa = async (id, dadosAtualizados) => {
+    try {
+      const resposta = await fetch(`/tarefas/${id}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosAtualizados)
+      });
+      if (resposta.ok) {
+        buscarTarefas(); // recarrega a lista
+        fecharEdicao();
+        dispararNotificacao('atualizacao', 'Tarefa atualizada com sucesso!');
+        return null;
+      }
+      const erros = await resposta.json(); // ex: { data_fim: ["..."] }
+      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
+      dispararNotificacao('erro', msg || 'Erro ao atualizar tarefa.');
+      return msg;
+    } catch (erro) {
+      console.error(erro);
+      dispararNotificacao('erro', 'Não consegui falar com a API.');
+      return 'Não consegui falar com a API.';
+    }
+  };
+
+  // faz um DELETE na API depois de confirmar com o usuário; o backend responde 204 se apagou
+  const excluirTarefa = async (id) => {
+    if (!window.confirm('Excluir esta tarefa? Isso não pode ser desfeito.')) return;
+    try {
+      const resposta = await fetch(`/tarefas/${id}/`, { method: 'DELETE' });
+      if (resposta.status === 204) {
+        buscarTarefas();
+        fecharEdicao();
+        dispararNotificacao('atualizacao', 'Tarefa excluída com sucesso!');
+      }
+    } catch (erro) {
+      console.error(erro);
+      dispararNotificacao('erro', 'Erro ao excluir tarefa.');
+    }
+  };
 
   const abrirEdicao = (tarefa) => setTarefaEmEdicao(tarefa); // abre o modal de atualizar com a tarefa clicada
   const fecharEdicao = () => setTarefaEmEdicao(null);
@@ -118,6 +194,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {notificacao && (
+        <Notificacao
+          tipo={notificacao.tipo}
+          mensagem={notificacao.mensagem}
+          aoFechar={fecharNotificacao}
+        />
+      )}
+
       <div id="main-view">
           <header className="header">
               <h1 className="header__title">Olá!</h1>

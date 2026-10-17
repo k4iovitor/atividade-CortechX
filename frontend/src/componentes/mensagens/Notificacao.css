@@ -1,0 +1,130 @@
+.cartao-alerta {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  background-color: #ffffff;
+  border-radius: var(--radius-md, 14px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  gap: 12px;
+  z-index: 100;
+  overflow: hidden;
+  animation: deslizarParaBaixo 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modificadores por tipo */
+.cartao-alerta--sucesso {
+  border-left: 4px solid var(--color-primary, #1a7a51);
+}
+
+.cartao-alerta--sucesso .cartao-alerta__icone {
+  background-color: var(--color-accent-light, rgba(50, 197, 179, 0.12));
+  color: var(--color-primary, #1a7a51);
+}
+
+.cartao-alerta--sucesso .cartao-alerta__barra-progresso {
+  background: linear-gradient(90deg, var(--color-primary, #1a7a51), var(--color-accent, #32c5b3));
+}
+
+.cartao-alerta--atualizacao {
+  border-left: 4px solid #2563eb;
+}
+
+.cartao-alerta--atualizacao .cartao-alerta__icone {
+  background-color: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+
+.cartao-alerta--atualizacao .cartao-alerta__barra-progresso {
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+}
+
+.cartao-alerta--erro {
+  border-left: 4px solid var(--color-danger, #e53e3e);
+}
+
+.cartao-alerta--erro .cartao-alerta__icone {
+  background-color: rgba(229, 62, 62, 0.12);
+  color: var(--color-danger, #e53e3e);
+}
+
+.cartao-alerta--erro .cartao-alerta__barra-progresso {
+  background: linear-gradient(90deg, var(--color-danger, #e53e3e), #f87171);
+}
+
+/* Estrutura interna */
+.cartao-alerta__icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cartao-alerta__conteudo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cartao-alerta__titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-main, #1a1a2e);
+  line-height: 1.2;
+}
+
+.cartao-alerta__mensagem {
+  font-size: 12px;
+  color: var(--color-text-muted, #4a4a68);
+  margin-top: 2px;
+}
+
+.cartao-alerta__botao-fechar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--color-text-light, #8888a0);
+  cursor: pointer;
+  padding: 4px;
+  transition: color var(--transition-fast, 0.2s);
+}
+
+.cartao-alerta__botao-fechar:hover {
+  color: var(--color-text-main, #1a1a2e);
+}
+
+.cartao-alerta__barra-progresso {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  animation: diminuirBarra 5s linear forwards;
+}
+
+@keyframes deslizarParaBaixo {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes diminuirBarra {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
