@@ -9,7 +9,6 @@ class Tarefas(models.Model):
     ]
 
     prioridades = [
-        (0, '0'),
         (1, '1'),
         (2, '2'),
         (3, '3'),
@@ -20,7 +19,7 @@ class Tarefas(models.Model):
     titulo = models.CharField(max_length=255, default='sem título')
     descricao = models.TextField()
     status = models.CharField(max_length=50, choices=escolhas)
-    prioridade = models.IntegerField(choices=prioridades, default=0)
+    prioridade = models.IntegerField(choices=prioridades, default=1)
     data_inicio = models.DateTimeField('data de inicio', null=False, blank=False)
     data_fim = models.DateTimeField('data de fim', null=False, blank=False)
 
