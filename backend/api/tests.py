@@ -82,7 +82,49 @@ class TarefaTeste(APITestCase):
         self.assertIn(atributo, response.data)
 
 
-    
+    @parameterized.expand([
+        ("status_errado", "status", "fazendo")
+    ])
+    def test_status_desconhecido(self, atributo_teste, atributo, valor_invalido):
+        carga = self.dado.copy()
+        carga[atributo] = valor_invalido
+
+        # teste para o POST
+        response = self.client.post('/tarefas/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+        # teste para o PATCH
+        response = self.client.patch('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+        # teste para o PUT
+        response = self.client.put('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+
+    @parameterized.expand([
+        ("status_correto", "status", "aberta"),
+        ("status_correto", "status", "em_andamento"),
+        ("status_correto", "status", "concluida"),
+    ])
+    def test_status_conhecido(self, atributo_teste, atributo, valor_invalido):
+        carga = self.dado.copy()
+        carga[atributo] = valor_invalido
+
+        # teste para o POST
+        response = self.client.post('/tarefas/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # teste para o PATCH
+        response = self.client.patch('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # teste para o PUT
+        response = self.client.put('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 
