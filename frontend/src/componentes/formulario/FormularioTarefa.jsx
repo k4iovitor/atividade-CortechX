@@ -30,7 +30,10 @@ export default function FormularioTarefa({ aoCriarTarefa, aoCancelar }) {
     // verifica se uma data de início foi inserida. Se sim, converte para o formato de data e tempo
 
     const mensagemErro = await aoCriarTarefa(novaTarefa); // chama a função passada via prop pelo componente pai, entregando a ela o objeto construído em lidarComEnvio
-    if (mensagemErro) setErro(mensagemErro);
+    // se a nova tarefa for criada, a função que cria a tarefa em App.jsx retorna null, caso contrário, uma mensagem de erro
+    if (mensagemErro) setErro(mensagemErro); // se mensagemErro for falso, o estado da mensagem de erro continua vazia. Se for true, preenche o estado com a informação de erro
+    // com o estado preenchido, o modal que mostra o erro em tela aparece
+    
   };
 
   return (
