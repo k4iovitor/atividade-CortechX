@@ -57,7 +57,7 @@ function App() {
 
   };
 
-  // faz um POST na API com a nova tarefa. Devolve null se deu certo, ou o texto do erro se o backend recusou (400)
+  // faz um POST na API com a nova tarefa. Devolve null se deu certo, ou o texto do erro se o backend recusou
   const criarTarefa = async (novaTarefa) => {
     try {
       const resposta = await fetch('/tarefas/', {
@@ -72,9 +72,9 @@ function App() {
         return null;
       }
       const erros = await resposta.json(); // ex: { data_fim: ["..."] }
-      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
+      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | '); // formata a mensagem de erro retornada pela API
       dispararNotificacao('erro', msg || 'Erro ao criar tarefa.');
-      return msg;
+      return msg; // retorna a mensagem de erro que será usada por um outro componente
     } catch (erro) {
       console.error(erro);
       dispararNotificacao('erro', 'Não consegui falar com a API.');
@@ -86,7 +86,7 @@ function App() {
   const abrirEdicao = (tarefa) => setTarefaEmEdicao(tarefa); // abre o modal de atualizar com a tarefa clicada
   const fecharEdicao = () => setTarefaEmEdicao(null);
 
-  // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou (400)
+  // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou
   const atualizarTarefa = async (id, dadosAtualizados) => {
     try {
       const resposta = await fetch(`/tarefas/${id}/`, {
@@ -101,9 +101,9 @@ function App() {
         return null;
       }
       const erros = await resposta.json(); // ex: { data_fim: ["..."] }
-      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
+      const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | '); // formata a mensagem de erro retornada pela API
       dispararNotificacao('erro', msg || 'Erro ao atualizar tarefa.');
-      return msg;
+      return msg; // retorna a mensagem de erro que será usada por um outro componente
     } catch (erro) {
       console.error(erro);
       dispararNotificacao('erro', 'Não consegui falar com a API.');
