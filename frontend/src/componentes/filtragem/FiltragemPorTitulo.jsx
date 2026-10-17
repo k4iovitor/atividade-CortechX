@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './FiltragemPorTitulo.css';
 import CartaoTarefa from '../cartao/CartaoTarefa';
 
-export default function FiltragemPorTitulo ({ tarefas, aoAlternarStatus, aoEditar }) {
+export default function FiltragemPorTitulo ({ tarefas, aoAlternarStatus, aoEditar, aoFiltrarAltaPrioridade, filtroAltaPrioridade }) {
     const [tituloTarefa, setTitulo] = useState(''); // estado que armazena o titulo da tarefa que o usuário deseja filtrar.
 
     const lidarComTexto = (e) => {
@@ -16,10 +16,27 @@ export default function FiltragemPorTitulo ({ tarefas, aoAlternarStatus, aoEdita
     return (
         <>
             <input type="text" name="titulo" className="input filter_by_title" placeholder="Filtrar por titulo..." required value={tituloTarefa} onChange={lidarComTexto}/>
-            <section className="task-list" style={{ marginTop: '20px' }}>
-                {tarefasFiltradas.map(tarefa => (
-                    <CartaoTarefa key={tarefa.id} tarefa={tarefa} onAlternarStatus={aoAlternarStatus} onEditar={aoEditar} />
-                ))}
+            
+            <div className="filtro-prioridade-wrapper">
+                <button
+                    type="button"
+                    className={`btn-filtro-prioridade ${filtroAltaPrioridade ? 'btn-filtro-prioridade--ativo' : ''}`}
+                    onClick={aoFiltrarAltaPrioridade}
+                >
+                    <span>{filtroAltaPrioridade ? 'Prioridade Alta • Ativo' : 'Filtrar Prioridade Alta'}</span>
+                </button>
+            </div>
+
+            <section className="task-list" style={{ marginTop: '16px' }}>
+                {tarefasFiltradas.length > 0 ? (
+                    tarefasFiltradas.map(tarefa => (
+                        <CartaoTarefa key={tarefa.id} tarefa={tarefa} onAlternarStatus={aoAlternarStatus} onEditar={aoEditar} />
+                    ))
+                ) : (
+                    <p style={{ textAlign: 'center', color: 'var(--color-text-light)', fontSize: '14px', marginTop: '20px' }}>
+                        Nenhuma tarefa encontrada.
+                    </p>
+                )}
             </section>
         </>
     );
