@@ -10,18 +10,28 @@ function App() {
   const [modalAberto, setModalAberto] = useState(false); // estado que armazena a informação de se o modal está aberto ou não
   const [tarefaEmEdicao, setTarefaEmEdicao] = useState(null); // tarefa que está sendo editada (null = modal de atualizar fechado)
   const [notificacao, setNotificacao] = useState(null); // estado que armazena os dados da notificação ativa (null = nenhuma notificação na tela)
+  const [filtroAltaPrioridade, setFiltroAltaPrioridade] = useState(false); // armazena true se o filtro de alta prioridade (>= 4) está ativo
   
   const timeoutRef = useRef(null); // guarda a referência do temporizador na memória para não perdê-lo entre as renderizações
 
-  const buscarTarefas = async () => {
+  // busca tarefas no endpoint principal ou no endpoint de maior prioridade se o filtro estiver ativo
+  const buscarTarefas = async (apenasAltaPrioridade = filtroAltaPrioridade) => {
     try {
-      const resposta = await fetch('/tarefas/');
+      const endpoint = apenasAltaPrioridade ? '/tarefas/maior_prioridade/' : '/tarefas/';
+      const resposta = await fetch(endpoint);
       if (resposta.ok) {
         const dados = await resposta.json();
         setTarefas(dados);
       }
     } catch (erro) { console.error(erro); }
   }; // função genérica do JS que coleta os dados dentro do endpoint de tarefas
+
+  // alterna o filtro chamando o endpoint de maior prioridade (>= 4) ou voltando para todas as tarefas
+  const alternarFiltroAltaPrioridade = async () => {
+    const novoFiltro = !filtroAltaPrioridade;
+    setFiltroAltaPrioridade(novoFiltro);
+    await buscarTarefas(novoFiltro);
+  };
 
   useEffect(() => {
     buscarTarefas();
@@ -183,7 +193,13 @@ function App() {
 
           <main className="main-content">
               <section className="filter-by-title" style={{ marginTop: '20px' }}>
-                <FiltragemPorTitulo tarefas={tarefas} aoAlternarStatus={alternarStatusTarefa} aoEditar={abrirEdicao}/>
+                <FiltragemPorTitulo 
+                  tarefas={tarefas} 
+                  aoAlternarStatus={alternarStatusTarefa} 
+                  aoEditar={abrirEdicao}
+                  aoFiltrarAltaPrioridade={alternarFiltroAltaPrioridade}
+                  filtroAltaPrioridade={filtroAltaPrioridade}
+                />
               </section>
           </main>
 

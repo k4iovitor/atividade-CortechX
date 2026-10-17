@@ -26,3 +26,49 @@
     gap: 12px;
     width: 100%;
 }
+
+/* Botão de filtro de alta prioridade */
+.filtro-prioridade-wrapper {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-filtro-prioridade {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm, 10px);
+    border: 1.5px solid var(--color-border-light, #e8ecf1);
+    background-color: #fff;
+    color: var(--color-text-muted, #4a4a68);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast, 0.2s);
+    box-shadow: var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.05));
+    user-select: none;
+}
+
+.btn-filtro-prioridade:hover {
+    border-color: var(--color-accent, #32c5b3);
+    color: var(--color-primary-dark, #125a3b);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-filtro-prioridade--ativo {
+    background: linear-gradient(135deg, var(--color-primary, #1a7a51) 0%, var(--color-accent, #32c5b3) 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(26, 122, 81, 0.25);
+}
+
+.btn-filtro-prioridade--ativo:hover {
+    color: #fff;
+    opacity: 0.95;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(26, 122, 81, 0.32);
+}
