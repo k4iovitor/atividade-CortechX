@@ -1,7 +1,34 @@
+import { useState, useEffect } from 'react';
 import './VisaoGeral.css';
 
 // Tela "Visão Geral": resumo das tarefas.
 export default function VisaoGeral({ aoFechar }) {
+  const [resumo, setResumo] = useState(null);
+  const [erro, setErro] = useState(false);
+
+  useEffect(() => {
+    const buscarResumo = async () => {
+      try {
+        const resposta = await fetch('/tarefas/estatisticas/');
+        if (resposta.ok) {
+          setResumo(await resposta.json());
+        } else {
+          setErro(true);
+        }
+      } catch (e) {
+        console.error(e);
+        setErro(true);
+      }
+    };
+    buscarResumo();
+  }, []);
+
+  const total = resumo ? resumo.total : '-';
+  const media = resumo ? Number(resumo.prioridade_media).toFixed(1) : '-'; // uma casa decimal
+  const concluidas = resumo ? (resumo.por_status.concluida || 0) : '-'; // status sem tarefas não vem na resposta, então o padrão é 0
+  const emAndamento = resumo ? (resumo.por_status.em_andamento || 0) : '-';
+  const abertas = resumo ? (resumo.por_status.aberta || 0) : '-';
+
   return (
     <>
       <div className="modal__header modal__header--with-close">
@@ -15,13 +42,17 @@ export default function VisaoGeral({ aoFechar }) {
       </div>
 
       <div className="modal__body">
+        {erro && (
+          <p style={{ textAlign: 'center' }}>Não foi possível carregar o resumo.</p>
+        )}
+
         <div className="chart-group">
           <div className="chart-item">
-            <div className="chart__circle"><span>3</span></div>
+            <div className="chart__circle"><span>{total}</span></div>
             <p className="chart__label">Quantidade<br />de Tarefas</p>
           </div>
           <div className="chart-item">
-            <div className="chart__circle"><span>3.8</span></div>
+            <div className="chart__circle"><span>{media}</span></div>
             <p className="chart__label">Prioridade<br />Média</p>
           </div>
         </div>
@@ -35,7 +66,7 @@ export default function VisaoGeral({ aoFechar }) {
               </svg>
             </span>
             <span className="status-item__label">Concluídas</span>
-            <span className="status-item__count">1</span>
+            <span className="status-item__count">{concluidas}</span>
           </li>
           <li className="status-item">
             <span className="status-item__icon">
@@ -46,7 +77,7 @@ export default function VisaoGeral({ aoFechar }) {
               </svg>
             </span>
             <span className="status-item__label">Em Andamento</span>
-            <span className="status-item__count">1</span>
+            <span className="status-item__count">{emAndamento}</span>
           </li>
           <li className="status-item">
             <span className="status-item__icon">
@@ -55,7 +86,7 @@ export default function VisaoGeral({ aoFechar }) {
               </svg>
             </span>
             <span className="status-item__label">Abertas</span>
-            <span className="status-item__count">1</span>
+            <span className="status-item__count">{abertas}</span>
           </li>
         </ul>
       </div>
