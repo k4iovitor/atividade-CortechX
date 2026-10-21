@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './VisaoGeral.css';
+import { buscarEstatisticas } from '../../services/tarefasService';
 
 // Tela "Visão Geral": resumo das tarefas.
 export default function VisaoGeral({ aoFechar }) {
@@ -9,7 +10,7 @@ export default function VisaoGeral({ aoFechar }) {
   useEffect(() => {
     const buscarResumo = async () => {
       try {
-        const resposta = await fetch('/tarefas/estatisticas/');
+        const resposta = await buscarEstatisticas();
         if (resposta.ok) {
           setResumo(await resposta.json());
         } else {
