@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import './App.css';
-import FormularioTarefa from './componentes/formulario/FormularioTarefa';
-import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
-import FormularioAtualizar from './componentes/formulario/FormularioAtualizar';
-import Notificacao from './componentes/mensagens/Notificacao';
-import VisaoGeral from './componentes/visao_geral/VisaoGeral';
+import './styles/App.css';
+import FormularioTarefa from './components/formulario/FormularioTarefa';
+import FiltragemPorTitulo from './components/filtragem/FiltragemPorTitulo';
+import FormularioAtualizar from './components/formulario/FormularioAtualizar';
+import Notificacao from './components/mensagens/Notificacao';
+import VisaoGeral from './pages/VisaoGeral/VisaoGeral';
+import * as tarefasService from './services/tarefasService'
 
 function App() {
   const [tarefas, setTarefas] = useState([]); // estado que armazena as tarefas criadas pelo usuário
@@ -19,8 +20,7 @@ function App() {
   // busca tarefas no endpoint principal ou no endpoint de maior prioridade se o filtro estiver ativo
   const buscarTarefas = async (apenasAltaPrioridade = filtroAltaPrioridade) => {
     try {
-      const endpoint = apenasAltaPrioridade ? '/tarefas/maior_prioridade/' : '/tarefas/';
-      const resposta = await fetch(endpoint);
+      const resposta = await tarefasService.listarTarefas(apenasAltaPrioridade);
       if (resposta.ok) {
         const dados = await resposta.json();
         setTarefas(dados);
@@ -72,11 +72,7 @@ function App() {
   // faz um POST na API com a nova tarefa. Devolve null se deu certo, ou o texto do erro se o backend recusou
   const criarTarefa = async (novaTarefa) => {
     try {
-      const resposta = await fetch('/tarefas/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(novaTarefa)
-      });
+      const resposta = await tarefasService.criarTarefa(novaTarefa);
       if (resposta.ok) {
         buscarTarefas();
         fecharModal();
@@ -104,11 +100,7 @@ function App() {
   // faz um PUT na API com os dados novos. Devolve null se deu certo, ou o texto do erro se o backend recusou
   const atualizarTarefa = async (id, dadosAtualizados) => {
     try {
-      const resposta = await fetch(`/tarefas/${id}/`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dadosAtualizados)
-      });
+      const resposta = await tarefasService.atualizarTarefa(id, dadosAtualizados);
       if (resposta.ok) {
         buscarTarefas(); // recarrega a lista
         fecharEdicao();
@@ -130,7 +122,7 @@ function App() {
   const excluirTarefa = async (id) => {
     if (!window.confirm('Excluir esta tarefa? Isso não pode ser desfeito.')) return;
     try {
-      const resposta = await fetch(`/tarefas/${id}/`, { method: 'DELETE' });
+      const resposta = await tarefasService.excluirTarefa(id);
       if (resposta.status === 204) {
         buscarTarefas();
         fecharEdicao();
@@ -149,22 +141,12 @@ function App() {
 
     try {
       if (novoStatus === 'concluida') {
-        const resposta = await fetch(`/tarefas/${id}/marcar_concluida/`, {
-          method: 'PATCH',
-        }); // se o status foi marcado para concluido, faz-se uma requisição PATCH no endpoint de marcar_concluida para modificar o status da tarefa para concluída
+        const resposta = await tarefasService.marcarConcluida(id); // se o status foi marcado para concluido, faz-se uma requisição PATCH no endpoint de marcar_concluida para modificar o status da tarefa para concluída
         if (!resposta.ok) {
-          await fetch(`/tarefas/${id}/`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: 'concluida' })
-          }); // se der erro pelo endpoint, forço o PATCH via JS
+          await tarefasService.alterarParcialmenteTarefa(id, { status: 'concluida'}); // se der erro pelo endpoint, forço o PATCH via JS
         }
       } else {
-        const resposta = await fetch(`/tarefas/${id}/`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'aberta', data_fim: null })
-        }); // se o status foi desmarcado, forço o PATCH via JS para modificar o status da tarefa para aberta novamente
+        const resposta = await tarefasService.alterarParcialmenteTarefa(id, { status: 'aberta', data_fim: null }); // se o status foi desmarcado, forço o PATCH via JS para modificar o status da tarefa para aberta novamente
         if (!resposta.ok) {
           const erros = await resposta.json();
           const msg = Object.entries(erros).map(([campo, m]) => `${campo}: ${[].concat(m).join(' ')}`).join(' | ');
