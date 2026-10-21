@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import './App.css';
-import FormularioTarefa from './componentes/formulario/FormularioTarefa';
-import FiltragemPorTitulo from './componentes/filtragem/FiltragemPorTitulo';
-import FormularioAtualizar from './componentes/formulario/FormularioAtualizar';
-import Notificacao from './componentes/mensagens/Notificacao';
-import VisaoGeral from './componentes/visao_geral/VisaoGeral';
+import './styles/App.css';
+import FormularioTarefa from './components/formulario/FormularioTarefa';
+import FiltragemPorTitulo from './components/filtragem/FiltragemPorTitulo';
+import FormularioAtualizar from './components/formulario/FormularioAtualizar';
+import Notificacao from './components/mensagens/Notificacao';
+import VisaoGeral from './pages/VisaoGeral/VisaoGeral';
 
 function App() {
   const [tarefas, setTarefas] = useState([]); // estado que armazena as tarefas criadas pelo usuário
