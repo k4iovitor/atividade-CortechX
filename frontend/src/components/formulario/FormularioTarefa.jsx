@@ -37,7 +37,7 @@ export default function FormularioTarefa({ aoCriarTarefa, aoCancelar }) {
   };
 
   return (
-    <form onSubmit={lidarComEnvio} style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+    <form onSubmit={lidarComEnvio} style={{display: 'flex', flexDirection: 'column'}}>
       <div className="modal__header modal__header--center">
           <h2 className="modal__title">Adicionar Tarefa</h2>
       </div>
