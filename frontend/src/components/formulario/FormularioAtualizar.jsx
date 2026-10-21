@@ -44,7 +44,7 @@ export default function FormularioAtualizar({ tarefa, aoAtualizar, aoExcluir, ao
   };
 
   return (
-    <form onSubmit={lidarComEnvio} style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <form onSubmit={lidarComEnvio} style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="modal__header modal__header--center">
         <button
           type="button"

@@ -180,6 +180,12 @@ function App() {
 
           <main className="main-content">
               <div className="stats-card" onClick={abrirVisaoGeral}>
+                <span className="stats-card__icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                    <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                  </svg>
+                </span>
                 <h2 className="stats-card__title">Visão Geral</h2>
               </div>
 
@@ -202,7 +208,7 @@ function App() {
       <div className="modal-overlay" id="overlay" style={{display: (modalAberto || tarefaEmEdicao || visaoGeralAberta) ? 'block' : 'none'}} onClick={() => { fecharModal(); fecharEdicao(); fecharVisaoGeral(); }}></div>
 
       {modalAberto && (
-      <div className="modal-wrapper" style={{display: 'block'}}>
+      <div className="modal-wrapper">
           <div className="modal">
               <FormularioTarefa aoCriarTarefa={criarTarefa} aoCancelar={fecharModal} />
           </div>
@@ -210,7 +216,7 @@ function App() {
       )}
 
        {tarefaEmEdicao && (
-      <div className="modal-wrapper" style={{display: 'block'}}>
+      <div className="modal-wrapper">
           <div className="modal">
               <FormularioAtualizar
                 key={tarefaEmEdicao.id}
@@ -224,7 +230,7 @@ function App() {
       )}
 
       {visaoGeralAberta && (
-      <div className="modal-wrapper" style={{display: 'block'}}>
+      <div className="modal-wrapper">
         <div className="modal">
           <VisaoGeral aoFechar={fecharVisaoGeral} />
         </div>

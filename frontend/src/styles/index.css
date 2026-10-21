@@ -69,7 +69,7 @@ body {
 .input {
     border: 1.5px solid var(--color-border-light);
     border-radius: var(--radius-sm);
-    padding: 13px 16px;
+    padding: 11px 14px;
     font-family: inherit;
     font-size: 14px;
     font-weight: 400;
@@ -177,18 +177,66 @@ body {
     font-weight: 600;
 }
 
-/* Stats Card */
+/* Stats Card — Botão Visão Geral */
 .stats-card {
-    background-color: var(--color-primary-light);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    border-radius: 50px;
+    padding: 14px 24px;
+    margin-bottom: 16px;
     cursor: pointer;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 14px rgba(26, 122, 81, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
 }
 
-.stats-card__title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.stats-card__info { font-size: 14px; font-weight: 400; }
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    pointer-events: none;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 122, 81, 0.4);
+}
+
+.stats-card:active {
+    transform: scale(0.98);
+}
+
+.stats-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stats-card__icon svg {
+    color: #fff;
+}
+
+.stats-card__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.2px;
+}
+
+.stats-card__info { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.85); }
 
 .divider {
     border: none;

@@ -1,9 +1,11 @@
 .modal__footer {
     background-color: #fff;
-    padding: 16px 20px;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    padding: 12px 20px;
     display: flex;
     gap: 12px;
-    padding-bottom: 36px;
+    padding-bottom: 24px;
     position: relative;
     z-index: 1;
 }
@@ -21,7 +23,7 @@
 
 .modal__footer .btn {
     flex: 1;
-    padding: 14px 20px;
+    padding: 12px 20px;
     border-radius: var(--radius-sm);
     font-size: 15px;
     font-weight: 600;

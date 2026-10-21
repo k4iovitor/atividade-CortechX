@@ -1,6 +1,6 @@
 .modal__textarea {
     resize: none;
-    height: 100px;
-    line-height: 1.6;
+    height: 80px;
+    line-height: 1.5;
     border-radius: var(--radius-sm);
 }
