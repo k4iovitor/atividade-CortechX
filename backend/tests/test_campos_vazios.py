@@ -34,6 +34,7 @@ class TarefaTeste(APITestCase):
         ("sem_data_inicio", "data_inicio"),
         ("sem_data_fim", "data_fim")
     ])
+
     def test_campos_vazios(self, atributo_teste, atributo):
 
         carga = self.dado.copy()
@@ -54,3 +55,55 @@ class TarefaTeste(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn(atributo, response.data)
 
+    # campos sem valor padrao: omitir qualquer um deles e erro
+    # no PATCH nao testa, porque ele e parcial e aceita qualquer campo omitido
+    @parameterized.expand([
+        ("sem_descricao", "descricao"),
+        ("sem_status", "status"),
+        ("sem_data_inicio", "data_inicio"),
+    ])
+
+    def test_campo_obrigatorio_omitido(self, atributo_teste, atributo):
+
+        carga = self.dado.copy()
+        del carga[atributo]
+
+        # teste para o POST
+        response = self.client.post('/tarefas/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+        # teste para o PUT
+        response = self.client.put('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+    # titulo e prioridade tem valor padrao no model e data_fim pode ser nula, entao omitir e aceito
+    @parameterized.expand([
+        ("sem_titulo", "titulo"),
+        ("sem_prioridade", "prioridade"),
+        ("sem_data_fim", "data_fim"),
+    ])
+
+    def test_campo_opcional_omitido(self, atributo_teste, atributo):
+
+        carga = self.dado.copy()
+        del carga[atributo]
+
+        # teste para o POST
+        response = self.client.post('/tarefas/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # teste para o PUT
+        response = self.client.put('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_corpo_vazio(self):
+
+        response = self.client.post('/tarefas/', {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("descricao", response.data)
+        self.assertIn("status", response.data)
+        self.assertIn("data_inicio", response.data)
+        
