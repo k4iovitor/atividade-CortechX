@@ -33,6 +33,7 @@ class TarefaTeste(APITestCase):
         ("prioridade_negativa", "prioridade", -1),
         ("prioridade_zero", "prioridade", 0),
     ])
+
     def test_fora_do_escopo(self, atributo_teste, atributo, valor_invalido):
         carga = self.dado.copy()
         carga[atributo] = valor_invalido
@@ -52,3 +53,27 @@ class TarefaTeste(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn(atributo, response.data)
 
+    @parameterized.expand([
+        ("prioridade_texto", "prioridade", "abc"),
+        ("data_inicio_texto", "data_inicio", "ontem"),
+        ("data_fim_formato_errado", "data_fim", "17/10/2026"),
+    ])
+        
+    def test_tipo_invalido(self, atributo_teste, atributo, valor_invalido):
+        carga = self.dado.copy()
+        carga[atributo] = valor_invalido
+
+        # teste para o POST
+        response = self.client.post('/tarefas/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+        # teste para o PATCH
+        response = self.client.patch('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
+
+        # teste para o PUT
+        response = self.client.put('/tarefas/1/', carga, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn(atributo, response.data)
