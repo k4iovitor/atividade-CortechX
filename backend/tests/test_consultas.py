@@ -41,6 +41,7 @@ class TarefaTeste(APITestCase):
         ("prioridade_4", 4, True),
         ("prioridade_5", 5, True),
     ])
+    
     def test_maior_prioridade(self, nome_teste, prioridade, deve_aparecer):
         carga = self.dado.copy()
         carga["titulo"] = "Teste prioridade"
@@ -58,6 +59,7 @@ class TarefaTeste(APITestCase):
         ("maiusculo", "LEITURA"),
         ("parte_do_titulo", "eit"),
     ])
+
     def test_busca_por_titulo(self, nome_teste, termo):
         response = self.client.get('/tarefas/busca_por_titulo/', {'q': termo})
 
@@ -83,3 +85,32 @@ class TarefaTeste(APITestCase):
         self.assertEqual(response.data['por_status'], {'aberta': 2, 'concluida': 1})
         # media de (3 + 5 + 1) / 3
         self.assertEqual(response.data['prioridade_media'], 3.0)
+
+    # sem o parametro q, ou com o q vazio, a busca e recusada
+    @parameterized.expand([
+        ("sem_q", {}),
+        ("q_vazio", {"q": ""}),
+    ])
+
+    def test_busca_por_titulo_sem_termo(self, nome_teste, parametros):
+        response = self.client.get('/tarefas/busca_por_titulo/', parametros)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("erro", response.data)
+
+    def test_busca_por_titulo_sem_resultado(self):
+        response = self.client.get('/tarefas/busca_por_titulo/', {'q': 'inexistente'})
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn("erro", response.data)
+
+    def test_estatisticas_banco_vazio(self):
+        # apaga a tarefa criada no setUp para o banco ficar vazio
+        Tarefas.objects.all().delete()
+
+        response = self.client.get('/tarefas/estatisticas/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['total'], 0)
+        self.assertEqual(response.data['por_status'], {})
+        self.assertEqual(response.data['prioridade_media'], 0)
